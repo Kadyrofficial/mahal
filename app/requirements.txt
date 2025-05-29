@@ -1,0 +1,10 @@
+fastapi
+sqlalchemy
+pydantic-settings
+uvicorn
+python-dotenv
+asyncpg
+pyjwt[crypto]
+websockets
+alembic
+psycopg2
