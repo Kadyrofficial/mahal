@@ -35,6 +35,6 @@ class DatabaseHelper:
         await session.close()
 
 db_helper = DatabaseHelper(
-    url=settings.db.url,
-    echo=settings.db.echo
+    url=settings.db_url,
+    echo=settings.DB_ECHO
 )

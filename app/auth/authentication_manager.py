@@ -14,9 +14,9 @@ security = HTTPBearer()
 
 
 class AuthManager:
-    token_validity = settings.auth_jwt.token_validity
-    secret_key = settings.auth_jwt.secret_key
-    algorithm = settings.auth_jwt.algorithm
+    token_validity = settings.TOKEN_VALIDITY
+    secret_key = settings.TOKEN_SECRET_KEY
+    algorithm = settings.ALGORITHM
 
     @classmethod
     def generate_token(cls, user_id: int) -> str:
