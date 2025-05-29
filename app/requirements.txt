@@ -8,3 +8,4 @@ pyjwt[crypto]
 websockets
 alembic
 psycopg2
+gunicorn
