@@ -19,7 +19,9 @@ app = FastAPI(
     version="1.0.0",
     description="Mahal Economic Society"
 )
-
+@app.get(path="/")
+def get_home():
+    return "Hi"
 app.include_router(router)
 app.include_router(ws_router)
 
