@@ -19,12 +19,18 @@ class Settings(BaseSettings):
     EMAIL_USER: str
     EMAIL_PASS: str
 
+    PAGINATION_LIMIT: int = 20
+
+    OTP_VALIDITY: int = 5
+
     @property
     def db_url(self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
     
+
     class Config:
         env_file = Path(__file__).resolve().parent.parent.parent / ".env"
         env_file_encoding = 'utf-8'
+
 
 settings = Settings()

@@ -1,21 +1,17 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from utils.ws_connection_manager import manager
+from app.utils import otp_websocket
 
 
 ws_router = APIRouter(prefix="/auth")
 
 
-@ws_router.websocket(
-    path="/send_otp",
-)
+@ws_router.websocket(path="/send_otp")
 async def send_otp(websocket: WebSocket):
-
     await websocket.accept()
-    manager.set_connection(websocket)
-
+    otp_websocket.set_connection(websocket)
     try:
         while True:
             await websocket.receive_text()
     except WebSocketDisconnect:
-        manager.clear_connection()
+        otp_websocket.clear_connection()

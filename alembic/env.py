@@ -12,7 +12,7 @@ from app.models import Base
 
 
 config = context.config
-sync_url = settings.db.url.replace("asyncpg", "psycopg2")
+sync_url = settings.db_url.replace("asyncpg", "psycopg2")
 config.set_main_option("sqlalchemy.url", sync_url)
 
 if config.config_file_name is not None:

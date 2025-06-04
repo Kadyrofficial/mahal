@@ -1,37 +1,31 @@
 from pydantic import BaseModel, ConfigDict
 
-from utils.mixins import PhoneMixin, CodeMixin, EmailMixin
+from app.utils.mixins import PhoneMixin, CodeMixin, EmailMixin
 
 
-class UserMeShema(BaseModel):
-    phone: str
-    email: str | None = None
+class NameShema(BaseModel):
     first_name: str
     last_name: str
+
+
+class MeShema(NameShema):
+    phone: str
+    email: str | None = None
     
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserMeUpdateNameShema(BaseModel):
-    first_name: str
-    last_name: str
-
-
-class UserMeUpdatePhoneShema(PhoneMixin, BaseModel):
+class PhoneShema(PhoneMixin):
     pass
 
 
-class UserMeVerifyPhoneShema(CodeMixin, UserMeUpdatePhoneShema):
+class VerifyPhoneShema(CodeMixin, PhoneMixin):
     pass
 
 
-class UserMeVerifyPhoneResponseSchema(BaseModel):
-    token: str
-
-
-class UserMeUpdateEmailShema(EmailMixin, BaseModel):
+class EmailShema(EmailMixin):
     pass
 
 
-class UserMeVerifyEmailShema(CodeMixin, UserMeUpdateEmailShema):
+class VerifyEmailShema(CodeMixin, EmailMixin):
     pass

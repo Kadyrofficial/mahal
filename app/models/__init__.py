@@ -1,4 +1,4 @@
-from .users import User
+from .users import User, UserType
 from .base import Base
 from .otp import OTP, Purpose
 from .carts import Cart
@@ -10,6 +10,7 @@ from .shipping import Shipping
 __all__ = [
     "Base",
     "User",
+    "UserType",
     "OTP",
     "Purpose",
     "Cart",
@@ -17,5 +18,5 @@ __all__ = [
     "ProductStatus",
     "Order",
     "Shipping",
-    "OrderStatus"
+    "OrderStatus",
 ]

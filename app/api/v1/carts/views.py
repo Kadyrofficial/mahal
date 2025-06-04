@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 
-from db import db_helper
-from models import User, Cart
-from auth import auth_manager
+from app.db import db_helper
+from app.models import User, Cart
+from app.utils import authentication
 from . import crud, utils
-from .shemas import CartSchema, CartViewSchema, AddProductSchema, UpdateProductSchema, GetProductSchema
+from .shemas import CartSchema, CartViewSchema, ProductSchema
 from . import dependencies
 
 
@@ -24,7 +24,7 @@ router = APIRouter(
 )
 async def get_my_cart(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-    user: User = Depends(auth_manager.check_auth)
+    user: User = Depends(authentication.check_auth)
 ):
     return await crud.get_my_cart(session, user)
 
@@ -57,10 +57,10 @@ async def order(
     path="/my_carts/{cart_id}/products",
     name="Add Product➕",
     description="Add products to your cart",
-    response_model=AddProductSchema
+    response_model=ProductSchema
 )
 async def add_product(
-    product_in: AddProductSchema,
+    product_in: ProductSchema,
     cart: Cart = Depends(dependencies.check_cart),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency)
 ):
@@ -71,26 +71,26 @@ async def add_product(
     path="/my_carts/{cart_id}/products/{product_id}",
     name="Get Product",
     description="Get product of your cart",
-    response_model=GetProductSchema
+    response_model=ProductSchema
 )
 def get_product(
     product_id: Annotated[int, Path(description="Id of the product")],
     cart: Cart = Depends(dependencies.check_cart),
-) -> GetProductSchema:
+) -> ProductSchema:
     product_to_get = next((p for p in cart.products if p.id == product_id), None)
-    return GetProductSchema.model_validate(product_to_get)
+    return ProductSchema.model_validate(product_to_get)
 
 
 @router.put(
     path="/my_carts/{cart_id}/products/{product_id}",
     name="Update Product➕",
     description="Update product of your cart",
-    response_model=UpdateProductSchema
+    response_model=ProductSchema
 )
 async def update_product(
-    product_in: UpdateProductSchema,
+    product_in: ProductSchema,
     product_id: Annotated[int, Path(description="Id of the product")],
-    
+    cart: Cart = Depends(dependencies.check_cart),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency)
 ):
     return await crud.update_product(product_in, product_id, cart, session)
@@ -102,7 +102,7 @@ async def update_product(
     description="Depete product from your cart"
 )
 async def delete_product(
-    product_id: Annotated[int, Path(description="Id of the product")],
+    product_id: Annotated[int, Path(description="Product id")],
     cart: Cart = Depends(dependencies.check_cart),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency)
 ):

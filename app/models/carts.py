@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from .users import User
     from .products import Product
 
+
 class Cart(Base):
     __tablename__ = "carts"
 

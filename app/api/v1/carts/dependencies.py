@@ -6,15 +6,15 @@ from sqlalchemy.orm import selectinload
 from fastapi import Depends, Path
 from typing import Annotated
 
-from models import User, Cart
-from auth import auth_manager
-from db import db_helper
+from app.models import User, Cart
+from app.utils import authentication
+from app.db import db_helper
 
 
 async def check_cart(
         cart_id: Annotated[int, Path(description="ID of the cart")],
         session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-        user: User = Depends(auth_manager.check_auth)) -> Cart:
+        user: User = Depends(authentication.check_auth)) -> Cart:
     try:
         user_id = user.id
         result = await session.execute(

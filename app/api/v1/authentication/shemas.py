@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from utils.mixins import PhoneMixin, CodeMixin
+from app.utils.mixins import PhoneMixin, CodeMixin
 
 
 class LoginSchema(PhoneMixin, BaseModel):
@@ -11,5 +11,5 @@ class VerifySchema(PhoneMixin, CodeMixin, BaseModel):
     pass
 
 
-class VerifyResponseSchema(BaseModel):
+class TokenSchema(BaseModel):
     token: str

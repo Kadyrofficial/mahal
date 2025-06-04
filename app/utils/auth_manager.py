@@ -5,15 +5,15 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from core import settings
-from models import User
-from db import db_helper
+from app.core import settings
+from app.models import User
+from app.db import db_helper
 
 
 security = HTTPBearer()
 
 
-class AuthManager:
+class Authentication:
     token_validity = settings.TOKEN_VALIDITY
     secret_key = settings.TOKEN_SECRET_KEY
     algorithm = settings.ALGORITHM
@@ -45,7 +45,8 @@ class AuthManager:
             result = await session.execute(
                 select(User).where(
                     User.id == int(user_id),
-                    User.is_active == True
+                    User.is_active == True,
+                    User.type == "customer"
                 )
             )
 
@@ -60,4 +61,33 @@ class AuthManager:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
 
 
-auth_manager = AuthManager()
+    @classmethod
+    async def check_admin(
+        cls,
+        credentials: HTTPAuthorizationCredentials = Depends(security),
+        session: AsyncSession = Depends(db_helper.scoped_session_dependency)
+    ):
+        token = credentials.credentials
+        try:
+            payload = jwt.decode(token, cls.secret_key, algorithms=[cls.algorithm])
+            user_id = payload.get("sub")
+            result = await session.execute(
+                select(User).where(
+                    User.id == int(user_id),
+                    User.is_active == True,
+                    User.type == "admin"
+                )
+            )
+
+            user = result.scalar_one_or_none()
+            if not user:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
+            
+            return user
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
+        except jwt.InvalidTokenError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
+
+
+authentication = Authentication()

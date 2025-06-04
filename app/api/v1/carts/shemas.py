@@ -1,44 +1,29 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import List
 
-from models import Shipping
-
-
-class AddProductSchema(BaseModel):
-    name: str
-    description: str | None = None
-    link: str | None = None
-    quantity: int | None = None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class UpdateProductSchema(AddProductSchema):
-    pass
-
-
-class GetProductSchema(AddProductSchema):
-    pass
+from app.models import Shipping
 
 
 class ListProductSchema(BaseModel):
     id: int
-    name: str
-    quantity: int
+    name: str = Field(max_length=150)
+    quantity: int = Field(ge=1)
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ProductSchema(ListProductSchema):
+    description: str | None = None
+    link: str | None = None
 
 
 class CartSchema(BaseModel):
     id: int
     product_count: int
     shipping_method: Shipping
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
 class CartViewSchema(CartSchema):
     products: List[ListProductSchema]
-
-    model_config = ConfigDict(from_attributes=True)
-    
