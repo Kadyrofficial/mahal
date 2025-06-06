@@ -24,9 +24,12 @@ class Settings(BaseSettings):
     OTP_VALIDITY: int = 5
 
     @property
-    def db_url(self) -> str:
+    def async_db_url(self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-    
+
+    @property
+    def sync_db_url(self) -> str:
+        return f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     class Config:
         env_file = Path(__file__).resolve().parent.parent.parent / ".env"

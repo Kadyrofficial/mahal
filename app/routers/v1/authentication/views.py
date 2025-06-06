@@ -15,7 +15,6 @@ router = APIRouter(
 @router.post(
     path="/login",
     summary="Login",
-    description="Login to the platform",
     response_model=LoginSchema
 )
 async def login(
@@ -28,7 +27,6 @@ async def login(
 @router.post(
         path="/verify",
         summary="Verify",
-        description="Verify identity",
         response_model=TokenSchema
 )
 async def verify(

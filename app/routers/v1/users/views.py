@@ -9,13 +9,15 @@ from app.models import User
 
 
 router = APIRouter(
-    tags=["ers👨‍💼"],
+    tags=["Users👨‍💼"],
     prefix="/users"
 )
 
 
 @router.get(
-    path="/me", response_model=MeShema
+    path="/me",
+    summary="Personal data",
+    response_model=MeShema
 )
 async def get_me(
     user: User = Depends(authentication.check_auth)
@@ -25,8 +27,7 @@ async def get_me(
 
 @router.put(
     path="/me/name",
-    summary="Update name",
-    description="Update first and last name of the user",
+    summary="Update first and last name",
     response_model=NameShema
 )
 async def update_me_name(
@@ -39,8 +40,7 @@ async def update_me_name(
 
 @router.put(
     path="/me/phone",
-    summary="Update phone number📱",
-    description="Update phone number",
+    summary="Update phone number",
     response_model=PhoneShema
 )
 async def update_phone(
@@ -53,8 +53,7 @@ async def update_phone(
 
 @router.post(
         path="/me/phone/verify",
-        summary="Verify updated phone number✅",
-        description="Verify updated phone number"
+        summary="Verify updated phone number",
 )
 async def verify_new_phone(
     verify_in: VerifyPhoneShema,
@@ -66,8 +65,7 @@ async def verify_new_phone(
 
 @router.put(
     path="/me/email",
-    summary="Update email✉️",
-    description="Update email",
+    summary="Update email",
     response_model=EmailShema
 )
 async def update_email(
@@ -81,8 +79,7 @@ async def update_email(
 
 @router.post(
     path="/me/email/verify",
-    summary="Verify updated email✅",
-    description="Verify updated email",
+    summary="Verify updated email",
     response_model=EmailShema
 )
 async def verify_new_email(

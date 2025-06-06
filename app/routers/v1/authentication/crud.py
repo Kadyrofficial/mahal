@@ -43,7 +43,7 @@ async def login(session: AsyncSession, login_in: LoginSchema) -> LoginSchema:
     otp = OTP(
         phone_or_email = login_in.phone,
         code = code,
-        expires_at = datetime.now(timezone.utc) + timedelta(minutes=settings.otp_validity),
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=settings.OTP_VALIDITY),
         purpose = Purpose.login
     )
 

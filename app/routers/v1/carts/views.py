@@ -18,8 +18,7 @@ router = APIRouter(
 
 @router.get(
     path="/my_carts",
-    name="Your Cart🛒",
-    description="View your cart items in your cart",
+    summary="Get your carts",
     response_model=list[CartSchema]
 )
 async def get_my_cart(
@@ -31,8 +30,7 @@ async def get_my_cart(
 
 @router.get(
     path="/my_carts/{cart_id}",
-    name="View Your Cart🛒👀",
-    description="View your products in your cart",
+    summary="Get your cart",
     response_model=CartViewSchema
 )
 def view_cart(
@@ -43,8 +41,8 @@ def view_cart(
 
 @router.post(
     path="/my_carts/{cart_id}/order",
-    name="Order Products🚚",
-    description="Order products of your cart"
+    summary="Order products in your cart",
+    response_model=CartViewSchema
 )
 async def order(
     cart: Cart = Depends(dependencies.check_cart),
@@ -55,8 +53,7 @@ async def order(
 
 @router.post(
     path="/my_carts/{cart_id}/products",
-    name="Add Product➕",
-    description="Add products to your cart",
+    summary="Add product",
     response_model=ProductSchema
 )
 async def add_product(
@@ -69,8 +66,7 @@ async def add_product(
 
 @router.get(
     path="/my_carts/{cart_id}/products/{product_id}",
-    name="Get Product",
-    description="Get product of your cart",
+    summary="Get product",
     response_model=ProductSchema
 )
 def get_product(
@@ -83,8 +79,7 @@ def get_product(
 
 @router.put(
     path="/my_carts/{cart_id}/products/{product_id}",
-    name="Update Product➕",
-    description="Update product of your cart",
+    summary="Update product",
     response_model=ProductSchema
 )
 async def update_product(
@@ -98,8 +93,7 @@ async def update_product(
 
 @router.delete(
     path="/my_carts/{cart_id}/products/{product_id}",
-    name="Delete Product❌",
-    description="Depete product from your cart"
+    summary="Delete product",
 )
 async def delete_product(
     product_id: Annotated[int, Path(description="Product id")],

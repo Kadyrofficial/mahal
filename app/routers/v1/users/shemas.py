@@ -15,17 +15,17 @@ class MeShema(NameShema):
     model_config = ConfigDict(from_attributes=True)
 
 
-class PhoneShema(PhoneMixin):
+class PhoneShema(PhoneMixin, BaseModel):
     pass
 
 
-class VerifyPhoneShema(CodeMixin, PhoneMixin):
+class VerifyPhoneShema(CodeMixin, PhoneMixin, BaseModel):
     pass
 
 
-class EmailShema(EmailMixin):
+class EmailShema(EmailMixin, BaseModel):
     pass
 
 
-class VerifyEmailShema(CodeMixin, EmailMixin):
+class VerifyEmailShema(CodeMixin, EmailMixin, BaseModel):
     pass

@@ -1,8 +1,6 @@
 from fastapi import APIRouter
 
-from .users.views import router as users_router
-from .authentication.views import router as auth_router
-from .authentication.ws import ws_router as auth_ws_router
+from app.routers.v1_ws.authentication.ws import ws_router as auth_ws_router
 from .carts.views import router as carts_router
 
 

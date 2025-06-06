@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.core import settings
-from app.models import User
+from app.models import User, UserType
 from app.db import db_helper
 
 
@@ -46,7 +46,7 @@ class Authentication:
                 select(User).where(
                     User.id == int(user_id),
                     User.is_active == True,
-                    User.type == "customer"
+                    User.type == UserType.customer
                 )
             )
 
@@ -62,7 +62,7 @@ class Authentication:
 
 
     @classmethod
-    async def check_admin(
+    async def admin_auth(
         cls,
         credentials: HTTPAuthorizationCredentials = Depends(security),
         session: AsyncSession = Depends(db_helper.scoped_session_dependency)
@@ -75,17 +75,20 @@ class Authentication:
                 select(User).where(
                     User.id == int(user_id),
                     User.is_active == True,
-                    User.type == "admin"
+                    User.type.in_([UserType.super_user, UserType.admin])
                 )
             )
 
             user = result.scalar_one_or_none()
+
             if not user:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
             
             return user
+
         except jwt.ExpiredSignatureError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
+
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
 
